@@ -45,8 +45,9 @@ model Propertyfeatures{
 model User{
   id        Int @id @default(autoincrement())
   name      String
+  password String?
   email     String  @unique
-  number    Int
+  number    BigInt
   properties  Property[]
 
   UserProperties    UserProperty[]  //<-connects join table
