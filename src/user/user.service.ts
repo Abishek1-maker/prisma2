@@ -7,6 +7,14 @@ import * as bcrypt from 'bcrypt';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  //------STEP 4::-------------
+  async updateHashedRefreahToken(userId: number, hashedRefreshToken: string) {
+    await this.prisma.user.update({
+      //<-----Donot return here--
+      where: { id: userId },
+      data: { hashedRefreshToken }, //----Updated in User table-----------
+    });
+  }
 
   async create(Data: CreateUserDto) {
     if (Data.password) {

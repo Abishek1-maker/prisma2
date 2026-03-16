@@ -14,6 +14,7 @@ import {
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -23,13 +24,19 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   login(@Request() req: any) {
-    return this.authService.login(req.user.id); //----Step 4---id,refreshtoken and token output
+    return this.authService.login(req.user.id); //id,refreshToken and token output
   }
   //---------Refresh Token API----------
-  //---------STEP::7---------
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
   refreshToken(@Request() req: any) {
     return this.authService.refreshToken(req.user.id);
+  }
+
+  //-------STEP 8-------
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  signout(@Request() req) {
+    return this.authService.signout(req.user.id);
   }
 }
