@@ -40,7 +40,8 @@ model User{
   id        Int @id @default(autoincrement())
   name      String
   password String?
-  hashedRefreshToken String?    //<-----------Step 1--------------
+  hashedRefreshToken String?  
+  role     String @default("USER") //--------Role-STEP:2--
   email     String  @unique
   number    String?
   properties  Property[]

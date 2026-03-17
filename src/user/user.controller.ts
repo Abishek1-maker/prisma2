@@ -15,6 +15,9 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
+import { Role } from 'src/auth/enums/role.enum';
+import { RolesGuard } from 'src/auth/guards/roles/roles.guard';
 
 @Controller('User')
 export class UserController {
@@ -29,7 +32,6 @@ export class UserController {
   findAll() {
     return this.userService.findAll();
   }
-  //Step 8: get profile through  bearer token
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Req() req: any) {
@@ -46,8 +48,13 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  //------------Role STEP:5 --------------
+  @Roles(Role.ADMIN, Role.EDITOR)
+  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard) //-------Need user jwt Guard because there is jwtstrategies so we can access user property from the request in roles.guard-----
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    await this.userService.remove(+id);
+    return { message: `User with id ${id} has been deleted successfully` };
   }
 }
